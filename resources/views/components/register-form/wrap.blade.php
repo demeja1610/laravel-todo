@@ -1,4 +1,4 @@
-<form action="#" class="register-form" method="POST">
+<form action="{{ route('register') }}" class="register-form" method="POST">
     @csrf
     @include('components\input-text\wrap', [
         'name' => 'name',
@@ -28,6 +28,11 @@
         'label' => __('Повторите пароль'),
         'error' => 'password',
     ])
-    <a href="{{ route('page.login') }}" class="link register-form__login">{!! __('Войти') !!}</a>
-    <button class="submit">{!! __('Зарегистрироваться') !!}</button>
+
+    <button type="submit" class="button register-form__send">{!! __('Зарегистрироваться') !!}</button>
+
+    <div class="login-form__register">
+        <p class="login-form__register-text">{!! __('Есть аккаунт?') !!}</p>
+        <a href="{{ route('page.login') }}" class="link register-form__login">{!! __('Войти') !!}</a>
+    </div>
 </form>

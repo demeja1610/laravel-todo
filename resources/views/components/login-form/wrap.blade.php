@@ -15,10 +15,16 @@
         'error' => 'password',
     ])
     @include('components\checkbox\wrap', [
+        'classes' => 'login-form__remember',
         'name' => 'remember_me',
         'id' => 'remember_me',
         'label' => __('Запомнить меня'),
     ])
-    <a href="{{ route('page.register') }}" class="link login-form__register">{!! __('Зарегистрироваться') !!}</a>
-    <button class="submit">{!! __('Войти') !!}</button>
+
+    <button type="submit" class="button login-form__send">{!! __('Войти') !!}</button>
+
+    <div class="login-form__register">
+        <p class="login-form__register-text">{!! __('Нет аккаунта?') !!}</p>
+        <a href="{{ route('page.register') }}" class="link login-form__register-link">{!! __('Зарегистрироваться') !!}</a>
+    </div>
 </form>

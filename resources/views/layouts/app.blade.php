@@ -16,9 +16,11 @@
 </head>
 
 <body class="body">
-    @include('components/notifications/wrap')
+    <div class="wrapper">
+        @include('components/notifications/wrap')
 
-    @yield('content')
+        @yield('content')
+    </div>
 
     <script src="{{ mix('js/main.js') }}"></script>
 </body>

@@ -1,23 +1,23 @@
 <div class="checkbox {{ $classes ?? '' }}">
-    @isset($label)
-        <label
-            class="checkbox__label {{ $labelClasses ?? '' }}"
-            @isset($id)
-                for="{{ $id }}"
-            @endisset
-        >
+    <input
+        type="checkbox"
+        class="checkbox__input {{ $inputClasses ?? '' }}"
+        @isset($id)
+            id="{{ $id }}"
+        @endisset
+        name="{{ $name }}"
+        @isset($checked)
+            checked="checked"
+        @endisset
+    >
+    <label
+        class="checkbox__label {{ $labelClasses ?? '' }}"
+        @isset($id)
+            for="{{ $id }}"
+        @endisset
+    >
+        @isset($label)
             {!! $label !!}
-        </label>
-        <input
-            type="checkbox"
-            class="checkbox__input {{ $inputClasses ?? '' }}"
-            @isset($id)
-                id="{{ $id }}"
-            @endisset
-            name="{{ $name }}"
-            @isset($checked)
-                checked="checked"
-            @endisset
-        >
-    @endisset
+        @endisset
+    </label>
 </div>
