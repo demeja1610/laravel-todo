@@ -1,0 +1,7 @@
+:root {
+    --primary: #33CCCC;
+    --primary-darken-5: #{darken(#33CCCC, 5%)};
+
+    --secondary: #ddd;
+    --error: #f00e0e;
+}

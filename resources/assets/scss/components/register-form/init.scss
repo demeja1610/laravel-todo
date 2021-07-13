@@ -1,0 +1,7 @@
+.register-form {
+    @extend .login-form;
+
+    &__send {
+        @extend .login-form__send;
+    }
+}
