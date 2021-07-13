@@ -11,7 +11,12 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js')
-    .postCss('resources/css/app.css', 'public/css', [
-        //
-    ]);
+mix.js('resources/assets/scripts/main.js', 'public/js')
+    .sourceMaps()
+    .browserSync({
+        host: process.env.APP_URL,
+        proxy: process.env.APP_URL,
+    })
+    .sass('resources/assets/scss/main.scss', 'public/css')
+    .sourceMaps()
+    .copyDirectory('resources/assets/images', 'public/images')
