@@ -53,4 +53,13 @@
             transform: translate(-50%, -50%) rotate(90deg);
         }
     }
+
+    &-edit {
+        padding: 15px;
+        width: 100%;
+
+        .tasks__item-change-status {
+            margin-bottom: 15px;
+        }
+    }
 }

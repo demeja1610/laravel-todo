@@ -28,7 +28,66 @@ class TaskService
         return $paginate ? $tasks->paginate($paginate) : $tasks->get();
     }
 
-    public function store(int $project_id, int $user_id, array $data) {
+    public function edit(int $task_id, int $user_id = null) {
+        try {
+            $task = Task::byId($task_id)->first();
+
+            if (!$task) {
+                throw new Exception('Задача не найдена', 404);
+            }
+
+            if ($user_id) {
+                if ($task->user_id !== $user_id) {
+                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
+                }
+            }
+
+            return $task;
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
+
+    public function update(int $task_id, int $user_id = null, array $data) {
+        try {
+            $task = Task::byId($task_id)->first();
+
+            if (!$task) {
+                throw new Exception('Задача не найдена', 404);
+            }
+
+            if ($user_id) {
+                if ($task->user_id !== $user_id) {
+                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
+                }
+            }
+
+            $task->name = $data['name'];
+            $task->content = $data['content'];
+
+            $success = $task->save();
+
+            if (!$success) {
+                throw new Exception('Не удалось изменить задачу', 500);
+            }
+
+            return (object) [
+                'message' => 'Задача успешно изменена',
+                'code' => 200,
+            ];
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
+
+    public function store(int $project_id, int $user_id, array $data)
+    {
         try {
             $task = new Task($data);
             $task->project_id = $project_id;
@@ -36,7 +95,7 @@ class TaskService
 
             $success = $task->save();
 
-            if(!$success) {
+            if (!$success) {
                 throw new Exception('Не удалось добавить задачу', 500);
             }
 
@@ -52,23 +111,24 @@ class TaskService
         }
     }
 
-    public function destroy(int $task_id, int $user_id = null) {
+    public function destroy(int $task_id, int $user_id = null)
+    {
         try {
             $task = Task::byId($task_id)->first();
 
-            if(!$task) {
+            if (!$task) {
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if($user_id) {
-                if($task->user_id !== $user_id) {
+            if ($user_id) {
+                if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете удалять задачи других пользователей', 403);
                 }
             }
 
             $success = $task->delete();
 
-            if(!$success) {
+            if (!$success) {
                 throw new Exception('Не удалось удалить задачу', 500);
             }
 
@@ -84,30 +144,31 @@ class TaskService
         }
     }
 
-    public function changeStatus(int $task_id, string $status, int $user_id = null) {
+    public function changeStatus(int $task_id, string $status, int $user_id = null)
+    {
         try {
             $task = Task::byId($task_id)->first();
 
-            if(!$task) {
+            if (!$task) {
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if($user_id) {
-                if($task->user_id !== $user_id) {
+            if ($user_id) {
+                if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять задачи других пользователей', 403);
                 }
             }
 
             $taskStatuses = TaskStatusEnum::getConstants();
 
-            if(!in_array($status, $taskStatuses)) {
+            if (!in_array($status, $taskStatuses)) {
                 throw new Exception('Неверно указан статус', 500);
             }
 
             $task->status = $status;
             $success = $task->save();
 
-            if(!$success) {
+            if (!$success) {
                 throw new Exception('Не удалось изменить статус задачи', 500);
             }
 

@@ -40,6 +40,8 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::group(['prefix' => 'tasks'], function () {
+        Route::get('{task_id}', [TaskController::class, 'edit'])->name('tasks.edit');
+        Route::patch('{task_id}', [TaskController::class, 'update'])->name('tasks.update');
         Route::put('{project_id}/store/', [TaskController::class, 'store'])->name('tasks.store');
         Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::patch('{task_id}/change-status/', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
