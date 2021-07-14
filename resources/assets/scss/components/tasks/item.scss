@@ -111,6 +111,14 @@
             }
         }
 
+        &-change-status {
+            margin-right: 15px;
+
+            &-select {
+                height: 30px;
+            }
+        }
+
         &.active {
             .tasks__item {
                 &-name {

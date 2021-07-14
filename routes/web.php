@@ -40,7 +40,8 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::group(['prefix' => 'tasks'], function () {
-        Route::put('/store/{project_id}', [TaskController::class, 'store'])->name('tasks.store');
-        Route::delete('/destroy/{task_id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::put('{project_id}/store/', [TaskController::class, 'store'])->name('tasks.store');
+        Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::patch('{task_id}/change-status/', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
     });
 });

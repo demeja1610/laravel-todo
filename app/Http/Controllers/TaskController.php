@@ -42,4 +42,14 @@ class TaskController extends Controller
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
         return redirect()->back();
     }
+
+    public function changeStatus(int $task_id, Request $request) {
+        $user_id = $request->user()->id;
+        $status = $request->input('status');
+
+        $response = $this->taskService->changeStatus($task_id, $status, $user_id);
+
+        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        return redirect()->back();
+    }
 }

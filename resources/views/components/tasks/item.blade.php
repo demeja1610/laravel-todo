@@ -6,6 +6,7 @@
             @include('icons.arrow', ['iClasses' => 'tasks__item-name-icon'])
         </p>
         <div class="tasks__item-actions">
+            @include('components\tasks\status-form', ['task' => $task])
             @include('components\tasks\delete', ['task' => $task])
         </div>
     </div>

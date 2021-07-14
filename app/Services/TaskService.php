@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enum\TaskStatusEnum;
 use App\Models\Task;
 use App\Repositories\TaskRepository;
 use Exception;
@@ -73,6 +74,45 @@ class TaskService
 
             return (object) [
                 'message' => 'Задача успешно удалена',
+                'code' => 200,
+            ];
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
+
+    public function changeStatus(int $task_id, string $status, int $user_id = null) {
+        try {
+            $task = Task::byId($task_id)->first();
+
+            if(!$task) {
+                throw new Exception('Задача не найдена', 404);
+            }
+
+            if($user_id) {
+                if($task->user_id !== $user_id) {
+                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
+                }
+            }
+
+            $taskStatuses = TaskStatusEnum::getConstants();
+
+            if(!in_array($status, $taskStatuses)) {
+                throw new Exception('Неверно указан статус', 500);
+            }
+
+            $task->status = $status;
+            $success = $task->save();
+
+            if(!$success) {
+                throw new Exception('Не удалось изменить статус задачи', 500);
+            }
+
+            return (object) [
+                'message' => 'Статус задачи успешно изменен',
                 'code' => 200,
             ];
         } catch (Exception $e) {
