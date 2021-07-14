@@ -5,6 +5,9 @@
             {!! $task->name !!}
             @include('icons.arrow', ['iClasses' => 'tasks__item-name-icon'])
         </p>
+        <div class="tasks__item-actions">
+            @include('components\tasks\delete', ['task' => $task])
+        </div>
     </div>
     <div class="tasks__item-content">
         {!! $task->content !!}

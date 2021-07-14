@@ -26,4 +26,8 @@ class Task extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function scopeById($query, $id) {
+        return $this->where('id', $id);
+    }
 }

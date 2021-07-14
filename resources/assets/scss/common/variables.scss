@@ -8,5 +8,6 @@
     --secondary-3: #777;
 
     --secondary-lighten-5: #{lighten(#ddd, 5%)};
+    --secondary-darken-30: #{darken(#ddd, 30%)};
     --error: #f00e0e;
 }

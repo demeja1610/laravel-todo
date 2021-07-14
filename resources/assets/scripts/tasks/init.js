@@ -1,9 +1,9 @@
 export const tasks = function () {
-    const tasks = document.querySelectorAll('.tasks__item');
+    const tasksTriggers = document.querySelectorAll('.tasks__item-name');
 
-    tasks.forEach(task => {
-        task.addEventListener('click', () => {
-            task.classList.toggle('active');
+    tasksTriggers.forEach(tasksTrigger => {
+        tasksTrigger.addEventListener('click', () => {
+            tasksTrigger.closest('.tasks__item').classList.toggle('active');
         })
     })
 }

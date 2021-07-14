@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function() {
     });
 
     Route::group(['prefix' => 'tasks'], function () {
-        // Route::get('/', [ProjectController::class, 'index'])->name('page.projects');
         Route::put('/store/{project_id}', [TaskController::class, 'store'])->name('tasks.store');
+        Route::delete('/destroy/{task_id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
     });
 });

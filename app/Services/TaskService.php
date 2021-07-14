@@ -50,4 +50,36 @@ class TaskService
             ];
         }
     }
+
+    public function destroy(int $task_id, int $user_id = null) {
+        try {
+            $task = Task::byId($task_id)->first();
+
+            if(!$task) {
+                throw new Exception('Задача не найдена', 404);
+            }
+
+            if($user_id) {
+                if($task->user_id !== $user_id) {
+                    throw new Exception('Вы не можете удалять задачи других пользователей', 403);
+                }
+            }
+
+            $success = $task->delete();
+
+            if(!$success) {
+                throw new Exception('Не удалось удалить задачу', 500);
+            }
+
+            return (object) [
+                'message' => 'Задача успешно удалена',
+                'code' => 200,
+            ];
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
 }

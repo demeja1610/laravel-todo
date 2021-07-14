@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TaskRequest;
 use Illuminate\Http\Request;
+use App\Enum\PermissionsEnum;
 use App\Services\TaskService;
+use App\Http\Requests\TaskRequest;
+use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
 {
@@ -17,6 +19,8 @@ class TaskController extends Controller
 
     public function store(int $project_id, TaskRequest $request)
     {
+        Gate::authorize(PermissionsEnum::manage_self_tasks);
+
         $user_id = $request->user()->id;
         $data = $request->only([
             'name',
@@ -27,5 +31,15 @@ class TaskController extends Controller
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
         return redirect()->route('page.projects.tasks', $project_id);
+    }
+
+    public function destroy(int $task_id, Request $request) {
+        Gate::authorize(PermissionsEnum::manage_self_tasks);
+
+        $user_id = $request->user()->id;
+        $response = $this->taskService->destroy($task_id, $user_id);
+
+        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        return redirect()->back();
     }
 }

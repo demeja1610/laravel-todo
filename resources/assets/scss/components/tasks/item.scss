@@ -17,6 +17,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-start;
+            width: 100%;
         }
 
         &-status {
@@ -40,6 +41,7 @@
             transition: color 0.3s ease;
             font-size: 16px;
             color: var(--secondary-2);
+            flex-grow: 1;
 
             &-icon {
                 width: 12px;
@@ -67,6 +69,46 @@
             border-top: 1px solid var(--secondary);
             width: 100%;
             padding-top: 10px;
+        }
+
+        &-actions {
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        &-delete {
+            width: 30px;
+            height: 30px;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 1px solid var(--secondary-darken-30);
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+            background-color: transparent;
+            cursor: pointer;
+
+            &-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                fill: var(--secondary-darken-30);
+                transition: fill 0.3s ease;
+            }
+
+            &:hover {
+                border-color: var(--primary);
+
+                .tasks__item-delete {
+                    &-icon {
+                        fill: var(--primary);
+                    }
+                }
+            }
         }
 
         &.active {
