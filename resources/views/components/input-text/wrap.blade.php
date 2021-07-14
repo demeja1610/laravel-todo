@@ -26,7 +26,7 @@
     >
     @isset($error)
         @error($error)
-            <p class="input-text__error">{!! $message !!}</p>
+            <p class="form-error input-text__error">{!! $message !!}</p>
         @enderror
     @endisset
 </div>

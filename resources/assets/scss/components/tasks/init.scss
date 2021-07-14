@@ -1,11 +1,13 @@
 @import "./item";
 @import "./header";
 @import "./search";
+@import "./form";
 
 .tasks {
     width: 100%;
     overflow: auto;
     position: relative;
+    flex-grow: 1;
 
     &__wrapper {
         position: absolute;
@@ -21,5 +23,34 @@
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
+    }
+
+    &__add-new {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        bottom: 15px;
+        right: 15px;
+        color: transparent;
+
+        &::before,
+        &::after {
+            content: "";
+            width: 60%;
+            height: 3px;
+            background-color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border-radius: 4px;
+        }
+
+        &::before {
+            transform: translate(-50%, -50%);
+        }
+
+        &::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
     }
 }

@@ -9,4 +9,5 @@
             @endforelse
         </div>
     </div>
+    <button class="button tasks__add-new modal-trigger" data-modal="add-new-task">{!! __('Добавить новую задачу') !!}</button>
 </div>

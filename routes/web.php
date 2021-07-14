@@ -5,6 +5,7 @@ use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,5 +37,10 @@ Route::group(['middleware' => 'auth'], function() {
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [ProjectController::class, 'index'])->name('page.projects');
         Route::get('/{id}', [ProjectController::class, 'tasks'])->name('page.projects.tasks');
+    });
+
+    Route::group(['prefix' => 'tasks'], function () {
+        // Route::get('/', [ProjectController::class, 'index'])->name('page.projects');
+        Route::put('/store/{project_id}', [TaskController::class, 'store'])->name('tasks.store');
     });
 });

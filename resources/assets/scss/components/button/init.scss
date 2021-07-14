@@ -20,4 +20,9 @@
         outline-color: var(--primary);
         outline-width: 1px;
     }
+
+    &--sm {
+        padding: 5px 10px;
+        font-weight: 400;
+    }
 }

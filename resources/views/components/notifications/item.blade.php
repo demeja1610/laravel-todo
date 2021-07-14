@@ -1,4 +1,4 @@
-<div class="notification__item {{ $class }}">
-    <button class="notification__item-close">&times;</button>
+<div class="notification {{ $class }}">
+    <button class="notification__close">&times;</button>
     {!! __($text) !!}
 </div>

@@ -26,6 +26,8 @@
         @yield('content')
     </div>
 
+    <div class="overlay {{ isset($overlayActive) && $overlayActive === true ? 'active' : '' }}"></div>
+
     <script src="{{ mix('js/main.js') }}"></script>
 </body>
 
