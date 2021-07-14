@@ -48,7 +48,7 @@ class ProjectController extends Controller
             $request->input('filter') :
             null;
 
-        $tasks = $this->taskService->tasks($user_id, $project_id, $q, $filter);
+        $tasks = $this->taskService->tasks($user_id, $project_id, $q, $filter, 20);
 
         return view('pages\project-tasks', [
             'project' => $project,
