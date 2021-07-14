@@ -16,6 +16,7 @@ use App\Http\Controllers\ProjectController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', [IndexController::class, 'index'])->middleware('auth')->name('index');
 
 Route::group(['middleware' => 'guest'], function() {
     Route::group(['prefix' => 'login'], function () {
