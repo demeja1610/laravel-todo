@@ -8,8 +8,16 @@
     color: #fff;
     transition: background-color 0.3s ease;
     cursor: pointer;
+    outline-color: var(--secondary-3);
+    outline-width: 1px;
 
     &:hover {
         background-color: var(--primary-darken-5);
+    }
+
+    &--light {
+        background-color: var(--secondary);
+        outline-color: var(--primary);
+        outline-width: 1px;
     }
 }

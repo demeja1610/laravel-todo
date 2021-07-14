@@ -24,7 +24,8 @@
         border-radius: 8px;
         padding: 5px 10px;
         font-size: 16px;
-        outline: none;
+        outline-color: var(--primary);
+        outline-width: 1px;
         transition: border-color 0.3s ease;
 
         &:focus {

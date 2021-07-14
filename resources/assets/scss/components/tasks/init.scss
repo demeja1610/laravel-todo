@@ -1,71 +1,25 @@
-.tasks {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 15px;
-    width: 100%;
+@import "./item";
+@import "./header";
+@import "./search";
 
-    &__item {
-        margin-bottom: 15px;
-        border: 1px solid var(--secondary);
-        padding: 10px;
+.tasks {
+    width: 100%;
+    overflow: auto;
+    position: relative;
+
+    &__wrapper {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
         width: 100%;
+    }
+
+    &__items {
+        padding: 15px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         justify-content: flex-start;
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-
-        &-name {
-            cursor: pointer;
-            transition: color 0.3s ease;
-            font-size: 16px;
-            color: var(--secondary-2);
-
-            &-icon {
-                width: 12px;
-                height: 12px;
-                fill: var(--secondary-2);
-                transition: fill 0.3s ease, transform 0.3s ease;
-            }
-
-            &:hover {
-                color: var(--primary-darken-5);
-
-                .tasks__item {
-                    &-name {
-                        &-icon {
-                            fill: var(--primary-darken-5);;
-                        }
-                    }
-                }
-            }
-        }
-
-        &-content {
-            display: none;
-            margin-top: 10px;
-            border-top: 1px solid var(--secondary);
-            width: 100%;
-            padding-top: 10px;
-        }
-
-        &.active {
-            .tasks__item {
-                &-name {
-                    &-icon {
-                        transform: rotate(90deg);
-                    }
-                }
-
-                &-content {
-                    display: inline-block;
-                }
-            }
-        }
     }
 }

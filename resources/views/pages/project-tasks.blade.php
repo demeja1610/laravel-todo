@@ -6,5 +6,5 @@
             @include('components.projects.wrap', ['projects' => $projects])
         @endslot
     @endcomponent
-    @include('components\tasks\wrap', ['tasks' => $project->tasks])
+    @include('components.tasks.wrap', ['tasks' => $tasks, 'project' => $project])
 @endsection
