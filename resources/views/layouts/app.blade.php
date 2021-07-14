@@ -17,7 +17,7 @@
 
 <body class="body">
     @auth
-        @include('components\header\wrap', ['menu' => $menu])
+        @include('components.header.wrap', ['menu' => $menu])
     @endauth
 
     <div class="wrapper">

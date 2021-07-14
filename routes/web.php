@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,10 @@ Route::group(['middleware' => 'guest'], function() {
 });
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', [IndexController::class, 'index'])->name('page.index');
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::group(['prefix' => 'projects'], function () {
+        Route::get('/', [ProjectController::class, 'index'])->name('page.projects');
+        Route::get('/{id}', [ProjectController::class, 'tasks'])->name('page.projects.tasks');
+    });
 });

@@ -31,7 +31,7 @@ class LoginController extends Controller
             return redirect()->back()->withInput();
         }
 
-        return redirect()->route('page.index');
+        return redirect()->route('page.projects');
     }
 
     public function logout(Request $request) {
