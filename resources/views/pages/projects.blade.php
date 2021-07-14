@@ -3,16 +3,16 @@
 @section('content')
     @component('components.sidebar.wrap')
         @slot('sidebarContent')
-            @include('components.projects.wrap', ['projects' => $projects])
+            @include('components.projects.sidebar', ['projects' => $projects])
         @endslot
     @endcomponent
     <p class="hello-text">
-        {!! __('Добро пожаловать в LaravelToDo.') !!}
-
         @if ($projects->isEmpty())
-            {!!__('Создайте новый проект, чтобы наполнить его задачами.') !!}
+            {!!__('Добро пожаловать в LaravelToDo. Создайте новый проект, чтобы наполнить его задачами.') !!}
         @else
-            {!! __('Выберите один из ваших проектов, чтобы посмотреть текущие задачи.') !!}
+            {{-- @include('components.projects.sidebar', [
+                'projects' => $projects,
+            ]) --}}
         @endif
     </p>
 @endsection

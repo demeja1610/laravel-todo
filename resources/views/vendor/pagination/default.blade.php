@@ -3,14 +3,14 @@
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
             <li class="pagination__item prev disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
-                @include('icons\arrow', [
+                @include('icons.arrow', [
                     'iClasses' => 'pagination__item-icon'
                 ])
             </li>
         @else
             <li>
                 <a class="pagination__item prev" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">
-                    @include('icons\arrow', [
+                    @include('icons.arrow', [
                         'iClasses' => 'pagination__item-icon'
                     ])
                 </a>
@@ -40,14 +40,14 @@
         @if ($paginator->hasMorePages())
             <li>
                 <a class="pagination__item next" href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')">
-                    @include('icons\arrow', [
+                    @include('icons.arrow', [
                         'iClasses' => 'pagination__item-icon'
                     ])
                 </a>
             </li>
         @else
             <li class="pagination__item next disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
-                @include('icons\arrow', [
+                @include('icons.arrow', [
                     'iClasses' => 'pagination__item-icon'
                 ])
             </li>

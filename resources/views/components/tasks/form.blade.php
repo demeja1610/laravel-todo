@@ -3,13 +3,13 @@
     @isset($method)
         @method($method)
     @endisset
-    @include('components\input-text\wrap', [
+    @include('components.input-text.wrap', [
         'name' => 'name',
         'placeholder' => 'Название задачи',
         'error' => 'name',
         'value' => isset($task) ? $task->name : old('name'),
     ])
-    @include('components\textarea\wrap', [
+    @include('components.textarea.wrap', [
         'name' => 'content',
         'placeholder' => 'Описание задачи',
         'error' => 'content',

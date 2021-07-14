@@ -3,6 +3,6 @@
     @csrf
     <button class="tasks__item-action tasks__item-delete">
         {!! __('Удалить') !!}
-        @include('icons\trash', ['iClasses' => 'tasks__item-action-icon'])
+        @include('icons.trash', ['iClasses' => 'tasks__item-action-icon'])
     </button>
 </form>
