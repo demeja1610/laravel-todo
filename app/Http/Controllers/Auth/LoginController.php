@@ -33,4 +33,17 @@ class LoginController extends Controller
 
         return redirect()->route('page.index');
     }
+
+    public function logout(Request $request) {
+        $response = $this->loginService->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        if(isset($response->error)) {
+            session()->flash('error', $response->error);
+            return redirect()->back();
+        }
+
+        return redirect()->route('page.login');
+    }
 }

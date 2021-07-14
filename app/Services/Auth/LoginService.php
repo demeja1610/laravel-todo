@@ -27,4 +27,22 @@ class LoginService
             ];
         }
     }
+
+    public function logout()
+    {
+        try {
+            $success = Auth::logout();
+
+            if (!$success) {
+                throw new Exception('Не удалось выйти', 500);
+            }
+
+            return $success;
+        } catch (Exception $ex) {
+            return (object) [
+                'error' => $ex->getMessage(),
+                'code' => $ex->getCode(),
+            ];
+        }
+    }
 }

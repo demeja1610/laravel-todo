@@ -16,6 +16,10 @@
 </head>
 
 <body class="body">
+    @auth
+        @include('components\header\wrap', ['menu' => $menu])
+    @endauth
+
     <div class="wrapper">
         @include('components/notifications/wrap')
 

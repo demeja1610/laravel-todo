@@ -30,4 +30,5 @@ Route::group(['middleware' => 'guest'], function() {
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/', [IndexController::class, 'index'])->name('page.index');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
