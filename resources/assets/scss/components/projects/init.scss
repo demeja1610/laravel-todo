@@ -1,1 +1,46 @@
-@import "./sidebar";
+// @import "./sidebar";
+@import "./item";
+
+.projects {
+    @extend .tasks;
+
+    &__wrapper {
+        @extend .tasks__wrapper;
+    }
+
+    &__items {
+        @extend .tasks__items;
+    }
+
+    &__add-new {
+        @extend .tasks__add-new;
+    }
+
+    &-edit {
+        @extend .tasks-edit;
+    }
+
+    &-form {
+        @extend .tasks-form;
+
+        &__submit {
+            @extend .tasks-form__submit;
+        }
+    }
+
+    &-header {
+        @extend .tasks-header;
+    }
+
+    &__search {
+        @extend .tasks__search;
+
+        &-submit {
+            @extend .tasks__search-submit;
+
+            &-icon {
+                @extend .tasks__search-submit-icon;
+            }
+        }
+    }
+}

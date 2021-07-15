@@ -1,3 +1,3 @@
 <div class="tasks-header">
-    @include('components.tasks.search', ['action' => $project->id])
+    @include('components.tasks.search', ['action' => route('page.projects.tasks', $project->id)])
 </div>

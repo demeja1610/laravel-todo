@@ -36,11 +36,15 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::group(['prefix' => 'projects'], function () {
         Route::get('/', [ProjectController::class, 'index'])->name('page.projects');
-        Route::get('/{id}', [ProjectController::class, 'tasks'])->name('page.projects.tasks');
+        Route::get('/{project_id}', [ProjectController::class, 'edit'])->name('page.projects.edit');
+        Route::patch('{project_id}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::put('/store', [ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/{project_id}/tasks', [ProjectController::class, 'tasks'])->name('page.projects.tasks');
+        Route::delete('{project_id}/destroy/', [ProjectController::class, 'destroy'])->name('projects.destroy');
     });
 
     Route::group(['prefix' => 'tasks'], function () {
-        Route::get('{task_id}', [TaskController::class, 'edit'])->name('tasks.edit');
+        Route::get('{task_id}', [TaskController::class, 'edit'])->name('page.tasks.edit');
         Route::patch('{task_id}', [TaskController::class, 'update'])->name('tasks.update');
         Route::put('{project_id}/store/', [TaskController::class, 'store'])->name('tasks.store');
         Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');

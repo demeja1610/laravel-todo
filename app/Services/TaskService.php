@@ -28,7 +28,8 @@ class TaskService
         return $paginate ? $tasks->paginate($paginate) : $tasks->get();
     }
 
-    public function edit(int $task_id, int $user_id = null) {
+    public function edit(int $task_id, int $user_id = null)
+    {
         try {
             $task = Task::byId($task_id)->first();
 
@@ -51,7 +52,8 @@ class TaskService
         }
     }
 
-    public function update(int $task_id, int $user_id = null, array $data) {
+    public function update(int $task_id, int $user_id = null, array $data)
+    {
         try {
             $task = Task::byId($task_id)->first();
 

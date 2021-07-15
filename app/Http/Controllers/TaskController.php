@@ -31,7 +31,7 @@ class TaskController extends Controller
 
         $response = $this->taskService->edit($task_id, $user_id);
 
-        if(isset($response->error)) {
+        if (isset($response->error)) {
             session()->flash('error', $response->error);
             return redirect()->back();
         }
@@ -56,7 +56,7 @@ class TaskController extends Controller
         $response = $this->taskService->update($task_id, $user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
-        return redirect()->route('tasks.edit', $task_id);
+        return redirect()->route('page.tasks.edit', $task_id);
     }
 
 
@@ -76,7 +76,8 @@ class TaskController extends Controller
         return redirect()->route('page.projects.tasks', $project_id);
     }
 
-    public function destroy(int $task_id, Request $request) {
+    public function destroy(int $task_id, Request $request)
+    {
         Gate::authorize(PermissionsEnum::manage_self_tasks);
 
         $user_id = $request->user()->id;
@@ -86,7 +87,8 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function changeStatus(int $task_id, Request $request) {
+    public function changeStatus(int $task_id, Request $request)
+    {
         $user_id = $request->user()->id;
         $status = $request->input('status');
 

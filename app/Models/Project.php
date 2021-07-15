@@ -13,6 +13,11 @@ class Project extends Model
 
     protected $softCascade = ['tasks'];
 
+    protected $fillable = [
+        'name',
+        'user_id',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -21,5 +26,9 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function scopeById($query, $id) {
+        return $this->where('id', $id);
     }
 }

@@ -8,8 +8,8 @@
                 ])
             </li>
         @else
-            <li>
-                <a class="pagination__item prev" href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">
+            <li class="pagination__item prev">
+                <a href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')">
                     @include('icons.arrow', [
                         'iClasses' => 'pagination__item-icon'
                     ])

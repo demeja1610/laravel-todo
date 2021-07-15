@@ -6,8 +6,18 @@ use App\Models\Project;
 
 Class ProjectRepository {
 
-    public function userProjects(int $user_id) {
-        return Project::where('user_id', $user_id);
+    public function userProjects(int $user_id, string $q = null) {
+        $projects = Project::query();
+
+        if($user_id) {
+            $projects->where('user_id', $user_id);
+        }
+
+        if($q) {
+            $projects->where('name', 'like', '%'. $q .'%');
+        }
+
+        return $projects;
     }
 
     public function tasks(int $project_id) {
