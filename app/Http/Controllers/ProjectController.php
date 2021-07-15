@@ -30,7 +30,8 @@ class ProjectController extends Controller
     public function index(Request $request) {
         Gate::authorize(PermissionsEnum::manage_self_projects);
 
-        $projects = $this->projectService->index($request->user()->id);
+        $user_id = $request->user()->id;
+        $projects = $this->projectService->index($user_id, 2);
 
         return view('pages\projects', ['projects' => $projects]);
     }

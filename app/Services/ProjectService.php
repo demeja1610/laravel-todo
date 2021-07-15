@@ -12,8 +12,10 @@ Class ProjectService {
         $this->projectRepository = $projectRepository;
     }
 
-    public function index(int $user_id) {
-        return $this->projectRepository->userProjects($user_id)->get();
+    public function index(int $user_id, int $paginate = null) {
+        $projects = $this->projectRepository->userProjects($user_id);
+
+        return $paginate ? $projects->paginate($paginate) : $projects->get();
     }
 
     public function tasks(int $project_id) {
