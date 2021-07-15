@@ -12,5 +12,4 @@
             {!! $projects->links('pagination::default') !!}
         @endif
     </div>
-    <button class="button projects__add-new modal-trigger" data-modal="add-new-project">{!! __('Добавить новый проект') !!}</button>
 </div>

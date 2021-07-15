@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Enum\PermissionsEnum;
 use Exception;
 use App\Models\Project;
+use Illuminate\Support\Facades\Gate;
 use App\Repositories\ProjectRepository;
 
 class ProjectService
@@ -15,7 +17,7 @@ class ProjectService
         $this->projectRepository = $projectRepository;
     }
 
-    public function index(int $user_id, string $q = null, int $paginate = null)
+    public function index(int $user_id = null, string $q = null, int $paginate = null)
     {
         $projects = $this->projectRepository->userProjects($user_id, $q)->orderByDesc('created_at');
 
@@ -49,7 +51,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id) {
+            if ($user_id  && Gate::denies(PermissionsEnum::manage_projects)) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять проекты других пользователей', 403);
                 }
@@ -108,7 +110,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id) {
+            if ($user_id  && Gate::denies(PermissionsEnum::manage_projects)) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Вы не можете удалять проекты других пользователей', 403);
                 }
@@ -146,7 +148,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id) {
+            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Запрошенный проект принадлежит другому пользователю', 403);
                 }

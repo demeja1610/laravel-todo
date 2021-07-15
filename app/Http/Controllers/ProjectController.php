@@ -28,10 +28,11 @@ class ProjectController extends Controller
         View::share('taskStatuses', $this->taskStatuses);
     }
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         Gate::authorize(PermissionsEnum::manage_self_projects);
 
-        $user_id = $request->user()->id;
+        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;
         $q = $request->input('q');
         $projects = $this->projectService->index($user_id, $q, 20);
 
@@ -85,7 +86,8 @@ class ProjectController extends Controller
         return redirect()->route('page.projects');
     }
 
-    public function destroy(int $project_id, Request $request) {
+    public function destroy(int $project_id, Request $request)
+    {
         Gate::authorize(PermissionsEnum::manage_self_projects);
 
         $user_id = $request->user()->id;
@@ -95,15 +97,19 @@ class ProjectController extends Controller
         return redirect()->route('page.projects');
     }
 
-    public function tasks(int $project_id, Request $request) {
+    /**
+     * В тз сказано что пользователь должен видеть только свои задачи
+     * Немного нелогично, что он в своем проекте не видит других задач
+     * Но все же сделано как сказано в тз
+     */
+    public function tasks(int $project_id, Request $request)
+    {
         Gate::authorize(PermissionsEnum::manage_self_projects);
 
-        $user_id = $request->user()->id;
+        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;;
         $project = $this->projectService->single($project_id, $user_id);
         $q = $request->input('q');
-        $filter = in_array($request->input('filter'), TaskStatusEnum::getConstants()) ?
-            $request->input('filter') :
-            null;
+        $filter = in_array($request->input('filter'), TaskStatusEnum::getConstants()) ? $request->input('filter') : null;
 
         $tasks = $this->taskService->tasks($user_id, $project_id, $q, $filter, 20);
 

@@ -19,21 +19,6 @@ class MenuServiceProvider extends ServiceProvider
                 'can' => PermissionsEnum::manage_self_projects,
             ],
             // [
-            //     'name' => 'Задачи',
-            //     'route' => 'page.projects',
-            //     'can' => PermissionsEnum::manage_self_tasks,
-            // ],
-            // [
-            //     'name' => 'Все проекты',
-            //     'route' => 'page.projects',
-            //     'can' => PermissionsEnum::manage_projects,
-            // ],
-            // [
-            //     'name' => 'Все задачи',
-            //     'route' => 'page.projects',
-            //     'can' => PermissionsEnum::manage_tasks,
-            // ],
-            // [
             //     'name' => 'Пользователи',
             //     'route' => 'page.projects',
             //     'can' => PermissionsEnum::manage_users,
