@@ -27,7 +27,11 @@ Class TaskRepository {
         }
 
         if($filter) {
-            $tasks->where('status', $filter);
+            if ($filter === 'deleted') {
+                $tasks->onlyTrashed();
+            } else {
+                $tasks->where('status', $filter);
+            }
         }
 
         return $tasks;

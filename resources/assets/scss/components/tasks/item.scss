@@ -31,9 +31,13 @@
             flex-wrap: nowrap;
             font-size: 14px;
             line-height: 14px;
-            margin-right: 15px;
+            margin-right: 10px;
             font-weight: 500;
             white-space: nowrap;
+
+            &.deleted {
+                background-color: var(--error);
+            }
         }
 
         &-name {

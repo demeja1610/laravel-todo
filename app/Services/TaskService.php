@@ -118,7 +118,7 @@ class TaskService
     public function destroy(int $task_id, int $user_id = null)
     {
         try {
-            $task = Task::byId($task_id)->first();
+            $task = Task::withTrashed()->where('id', $task_id)->first();
 
             if (!$task) {
                 throw new Exception('Задача не найдена', 404);
@@ -130,7 +130,7 @@ class TaskService
                 }
             }
 
-            $success = $task->delete();
+            $success = $task->trashed() ? $task->forceDelete() : $task->delete();
 
             if (!$success) {
                 throw new Exception('Не удалось удалить задачу', 500);
@@ -178,6 +178,42 @@ class TaskService
 
             return (object) [
                 'message' => 'Статус задачи успешно изменен',
+                'code' => 200,
+            ];
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
+
+    public function restore(int $task_id, $user_id) {
+        try {
+            $task = Task::onlyTrashed()->where('id', $task_id)->first();
+
+            if (!$task) {
+                throw new Exception('Задача не найдена', 404);
+            }
+
+            if(!$task->trashed()) {
+                throw new Exception('Задача не нуждается в востановлении', 404);
+            }
+
+            if ($user_id && Gate::denies(PermissionsEnum::manage_tasks)) {
+                if ($task->user_id !== $user_id) {
+                    throw new Exception('Вы не можете восстанавливать задачи других пользователей', 403);
+                }
+            }
+
+            $success = $task->restore();
+
+            if (!$success) {
+                throw new Exception('Не удалось восстановить задачу', 500);
+            }
+
+            return (object) [
+                'message' => 'Задача успешно восстановлена',
                 'code' => 200,
             ];
         } catch (Exception $e) {

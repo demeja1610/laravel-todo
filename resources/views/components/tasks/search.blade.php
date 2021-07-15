@@ -17,6 +17,7 @@
                     {!! __('task-status.' . $taskStatus) !!}
                 </option>
             @endforeach
+            <option value="deleted" @if(Request::input('filter') === 'deleted') selected @endif>{!! __('Удаленные') !!}</option>
         </select>
     </div>
     <button class="button button--light tasks__search-submit">

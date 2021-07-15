@@ -106,10 +106,13 @@ class ProjectController extends Controller
     {
         Gate::authorize(PermissionsEnum::manage_self_projects);
 
-        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;;
+        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;
+        $filters = TaskStatusEnum::getConstants();
         $project = $this->projectService->single($project_id, $user_id);
         $q = $request->input('q');
-        $filter = in_array($request->input('filter'), TaskStatusEnum::getConstants()) ? $request->input('filter') : null;
+        $filter = in_array($request->input('filter'), $filters) || $request->input('filter') === 'deleted'
+            ? $request->input('filter')
+            : null;
 
         $tasks = $this->taskService->tasks($user_id, $project_id, $q, $filter, 20);
 

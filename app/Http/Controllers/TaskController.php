@@ -97,4 +97,14 @@ class TaskController extends Controller
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
         return redirect()->back();
     }
+
+    public function restore(int $task_id, Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $response = $this->taskService->restore($task_id, $user_id);
+
+        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        return redirect()->back();
+    }
 }

@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth', 'isBanned']], function() {
         Route::put('{project_id}/store/', [TaskController::class, 'store'])->name('tasks.store');
         Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::patch('{task_id}/change-status/', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
+        Route::put('{task_id}/restore/', [TaskController::class, 'restore'])->name('tasks.restore');
     });
 
     Route::group(['prefix' => 'users'], function () {
