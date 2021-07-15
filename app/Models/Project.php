@@ -18,6 +18,16 @@ class Project extends Model
         'user_id',
     ];
 
+    public static function boot() {
+        parent::boot();
+
+        static::deleted(function($project) {
+            if ($project->isForceDeleting()) {
+                $project->tasks()->forceDelete();
+            }
+        });
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -42,6 +42,7 @@ Route::group(['middleware' => ['auth', 'isBanned']], function() {
         Route::put('/store', [ProjectController::class, 'store'])->name('projects.store');
         Route::get('/{project_id}/tasks', [ProjectController::class, 'tasks'])->name('page.projects.tasks');
         Route::delete('{project_id}/destroy/', [ProjectController::class, 'destroy'])->name('projects.destroy');
+        Route::put('{project_id}/restore/', [ProjectController::class, 'restore'])->name('projects.restore');
     });
 
     Route::group(['prefix' => 'tasks'], function () {

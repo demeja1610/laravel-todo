@@ -9,6 +9,6 @@
         'error' => 'name',
         'value' => isset($project) ? $project->name : old('name'),
     ])
-
+    
     <button type="submit" class="button projects-form__submit">{!! isset($project) ? __('Сохранить') : __('Добавить') !!}</button>
 </form>

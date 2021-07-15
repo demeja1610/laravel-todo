@@ -34,7 +34,8 @@ class ProjectController extends Controller
 
         $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;
         $q = $request->input('q');
-        $projects = $this->projectService->index($user_id, $q, 20);
+        $filter = $request->input('filter') === 'deleted' ? $request->input('filter') : null;
+        $projects = $this->projectService->index($user_id, $filter, $q, 20);
 
         return view('pages\projects', ['projects' => $projects]);
     }
@@ -94,14 +95,9 @@ class ProjectController extends Controller
         $response = $this->projectService->destroy($project_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
-        return redirect()->route('page.projects');
+        return redirect()->back();
     }
 
-    /**
-     * В тз сказано что пользователь должен видеть только свои задачи
-     * Немного нелогично, что он в своем проекте не видит других задач
-     * Но все же сделано как сказано в тз
-     */
     public function tasks(int $project_id, Request $request)
     {
         Gate::authorize(PermissionsEnum::manage_self_projects);
@@ -120,5 +116,15 @@ class ProjectController extends Controller
             'project' => $project,
             'tasks' => $tasks,
         ]);
+    }
+
+    public function restore(int $project_id, Request $request)
+    {
+        $user_id = $request->user()->id;
+
+        $response = $this->projectService->restore($project_id, $user_id);
+
+        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        return redirect()->back();
     }
 }

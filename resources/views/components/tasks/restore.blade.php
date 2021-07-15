@@ -2,7 +2,6 @@
     @method('put')
     @csrf
     <button class="tasks__item-action tasks__item-delete">
-        {!! __('Восстановить') !!}
         @include('icons.restore', ['iClasses' => 'tasks__item-action-icon'])
     </button>
 </form>

@@ -17,9 +17,9 @@ class ProjectService
         $this->projectRepository = $projectRepository;
     }
 
-    public function index(int $user_id = null, string $q = null, int $paginate = null)
+    public function index(int $user_id = null, string $filter = null, string $q = null, int $paginate = null)
     {
-        $projects = $this->projectRepository->userProjects($user_id, $q)->orderByDesc('created_at');
+        $projects = $this->projectRepository->userProjects($user_id, $filter, $q)->orderByDesc('created_at');
 
         return $paginate ? $projects->paginate($paginate) : $projects->get();
     }
@@ -29,7 +29,7 @@ class ProjectService
         try {
             $project = $this->single($project_id, $user_id);
 
-            if(isset($project->error)) {
+            if (isset($project->error)) {
                 throw new Exception($project->error, $project->code);
             }
 
@@ -104,7 +104,7 @@ class ProjectService
     public function destroy(int $project_id, int $user_id = null)
     {
         try {
-            $project = Project::byId($project_id)->first();
+            $project = Project::withTrashed()->where('id', $project_id)->first();
 
             if (!$project) {
                 throw new Exception('Проект не найден', 404);
@@ -116,7 +116,7 @@ class ProjectService
                 }
             }
 
-            $success = $project->delete();
+            $success = $project->trashed() ? $project->forceDelete() : $project->delete();
 
             if (!$success) {
                 throw new Exception('Не удалось удалить проект', 500);
@@ -155,6 +155,42 @@ class ProjectService
             }
 
             return $project;
+        } catch (Exception $e) {
+            return (object) [
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ];
+        }
+    }
+
+    public function restore(int $project_id, $user_id) {
+        try {
+            $project = Project::onlyTrashed()->where('id', $project_id)->first();
+
+            if (!$project) {
+                throw new Exception('Проект не найден', 404);
+            }
+
+            if(!$project->trashed()) {
+                throw new Exception('Проект не нуждается в востановлении', 404);
+            }
+
+            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+                if ($project->user_id !== $user_id) {
+                    throw new Exception('Вы не можете восстанавливать проекты других пользователей', 403);
+                }
+            }
+
+            $success = $project->restore();
+
+            if (!$success) {
+                throw new Exception('Не удалось восстановить проект', 500);
+            }
+
+            return (object) [
+                'message' => 'Проект успешно восстановлен',
+                'code' => 200,
+            ];
         } catch (Exception $e) {
             return (object) [
                 'error' => $e->getMessage(),

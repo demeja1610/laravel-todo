@@ -2,7 +2,6 @@
     @method('delete')
     @csrf
     <button class="projects__item-action projects__item-delete">
-        {!! __('Удалить') !!}
         @include('icons.trash', ['iClasses' => 'projects__item-action-icon'])
     </button>
 </form>
