@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +32,7 @@ Route::group(['middleware' => 'guest'], function() {
     });
 });
 
-Route::group(['middleware' => 'auth'], function() {
+Route::group(['middleware' => ['auth', 'isBanned']], function() {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::group(['prefix' => 'projects'], function () {
@@ -49,5 +50,12 @@ Route::group(['middleware' => 'auth'], function() {
         Route::put('{project_id}/store/', [TaskController::class, 'store'])->name('tasks.store');
         Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::patch('{task_id}/change-status/', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
+    });
+
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [UserController::class, 'index'])->name('page.users');
+        Route::get('/{user_id}/block', [UserController::class, 'block'])->name('users.block');
+        Route::get('/{user_id}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
+        Route::delete('{user_id}/destroy/', [UserController::class, 'destroy'])->name('users.destroy');
     });
 });

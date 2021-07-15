@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    @if ($projects->isEmpty())
-        <p class="hello-text">
-            {!!__('Добро пожаловать в LaravelToDo. Создайте новый проект, чтобы наполнить его задачами.') !!}
-        </p>
-    @else
-        @include('components.projects.wrap', [
-            'projects' => $projects,
-            'showAddNew' => true,
-        ])
-    @endif
+
+    @include('components.projects.wrap', [
+        'projects' => $projects,
+        'showAddNew' => true,
+    ])
 
     @component('components.modal.wrap')
         @slot('dataModal', 'add-new-project')

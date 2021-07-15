@@ -31,4 +31,8 @@ class User extends Authenticatable
     public function tasks() {
        return $this->hasMany(Task::class);
     }
+
+    public function scopeById($query, $id) {
+        return $this->where('id', $id);
+    }
 }

@@ -18,11 +18,11 @@ class MenuServiceProvider extends ServiceProvider
                 'route' => 'page.projects',
                 'can' => PermissionsEnum::manage_self_projects,
             ],
-            // [
-            //     'name' => 'Пользователи',
-            //     'route' => 'page.projects',
-            //     'can' => PermissionsEnum::manage_users,
-            // ],
+            [
+                'name' => 'Пользователи',
+                'route' => 'page.users',
+                'can' => PermissionsEnum::manage_users,
+            ],
             [
                 'name' => 'Выйти',
                 'route' => 'logout',
