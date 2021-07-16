@@ -1,3 +1,3 @@
 <div class="projects-header">
-    @include('components.projects.search', ['action' => route('page.users')])
+    @include('components.users.search', ['action' => route('page.users')])
 </div>
