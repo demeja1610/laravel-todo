@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Enum\PermissionsEnum;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,12 +15,6 @@ class MenuServiceProvider extends ServiceProvider
             [
                 'name' => 'Проекты',
                 'route' => 'page.projects',
-                'can' => PermissionsEnum::manage_self_projects,
-            ],
-            [
-                'name' => 'Пользователи',
-                'route' => 'page.users',
-                'can' => PermissionsEnum::manage_users,
             ],
             [
                 'name' => 'Выйти',

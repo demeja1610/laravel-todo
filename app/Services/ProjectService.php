@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Enum\PermissionsEnum;
 use Exception;
 use App\Models\Project;
 use Illuminate\Support\Facades\Gate;
@@ -51,7 +50,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id  && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять проекты других пользователей', 403);
                 }
@@ -110,7 +109,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id  && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Вы не можете удалять проекты других пользователей', 403);
                 }
@@ -148,7 +147,7 @@ class ProjectService
                 throw new Exception('Проект не найден', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Запрошенный проект принадлежит другому пользователю', 403);
                 }
@@ -175,7 +174,7 @@ class ProjectService
                 throw new Exception('Проект не нуждается в востановлении', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($project->user_id !== $user_id) {
                     throw new Exception('Вы не можете восстанавливать проекты других пользователей', 403);
                 }

@@ -23,7 +23,7 @@ class ProjectFactory extends Factory
     {
         return [
             'name' => $this->faker->text(30),
-            'user_id' => $this->faker->numberBetween(1, 11),
+            'user_id' => $this->faker->numberBetween(1, 10),
         ];
     }
 }

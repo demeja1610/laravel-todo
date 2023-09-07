@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Enum\TaskStatusEnum;
 use Illuminate\Http\Request;
-use App\Enum\PermissionsEnum;
 use App\Services\TaskService;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use App\Http\Requests\ProjectRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -30,11 +30,10 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
-
-        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;
+        $user_id = Auth::id();
         $q = $request->input('q');
         $filter = $request->input('filter') === 'deleted' ? $request->input('filter') : null;
+
         $projects = $this->projectService->index($user_id, $filter, $q, 20);
 
         return view('pages.projects', ['projects' => $projects]);
@@ -42,9 +41,7 @@ class ProjectController extends Controller
 
     public function edit(int $project_id, Request $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
-
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
         $response = $this->projectService->edit($project_id, $user_id);
 
         if (isset($response->error)) {
@@ -59,9 +56,8 @@ class ProjectController extends Controller
 
     public function update(int $project_id, ProjectRequest $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $data = $request->only([
             'name',
         ]);
@@ -69,15 +65,14 @@ class ProjectController extends Controller
         $response = $this->projectService->update($project_id, $user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
-        
+
         return redirect()->route('page.projects.edit', $project_id);
     }
 
     public function store(ProjectRequest $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $data = $request->only([
             'name',
         ]);
@@ -89,11 +84,10 @@ class ProjectController extends Controller
         return redirect()->route('page.projects');
     }
 
-    public function destroy(int $project_id, Request $request)
+    public function destroy(int $project_id)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $response = $this->projectService->destroy($project_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
@@ -103,9 +97,7 @@ class ProjectController extends Controller
 
     public function tasks(int $project_id, Request $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_projects);
-
-        $user_id = Gate::check(PermissionsEnum::manage_projects) ? null : $request->user()->id;
+        $user_id = Auth::id();
         $filters = TaskStatusEnum::getConstants();
         $project = $this->projectService->single($project_id, $user_id);
         $q = $request->input('q');
@@ -121,9 +113,9 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function restore(int $project_id, Request $request)
+    public function restore(int $project_id)
     {
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
 
         $response = $this->projectService->restore($project_id, $user_id);
 

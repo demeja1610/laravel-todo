@@ -5,7 +5,6 @@ namespace App\Services;
 use Exception;
 use App\Models\Task;
 use App\Enum\TaskStatusEnum;
-use App\Enum\PermissionsEnum;
 use App\Repositories\TaskRepository;
 use Illuminate\Support\Facades\Gate;
 
@@ -39,7 +38,7 @@ class TaskService
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять задачи других пользователей', 403);
                 }
@@ -63,7 +62,7 @@ class TaskService
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять задачи других пользователей', 403);
                 }
@@ -124,7 +123,7 @@ class TaskService
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете удалять задачи других пользователей', 403);
                 }
@@ -157,7 +156,7 @@ class TaskService
                 throw new Exception('Задача не найдена', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_projects)) {
+            if ($user_id) {
                 if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете изменять задачи других пользователей', 403);
                 }
@@ -200,7 +199,7 @@ class TaskService
                 throw new Exception('Задача не нуждается в востановлении', 404);
             }
 
-            if ($user_id && Gate::denies(PermissionsEnum::manage_tasks)) {
+            if ($user_id) {
                 if ($task->user_id !== $user_id) {
                     throw new Exception('Вы не можете восстанавливать задачи других пользователей', 403);
                 }

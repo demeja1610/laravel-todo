@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Enum\PermissionsEnum;
 use App\Enum\TaskStatusEnum;
+use Illuminate\Http\Request;
 use App\Services\TaskService;
-use App\Http\Requests\TaskRequest;
 use App\Services\ProjectService;
+use App\Http\Requests\TaskRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 class TaskController extends Controller
@@ -25,9 +25,7 @@ class TaskController extends Controller
 
     public function edit(int $task_id, Request $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_tasks);
-
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
 
         $response = $this->taskService->edit($task_id, $user_id);
 
@@ -45,9 +43,8 @@ class TaskController extends Controller
 
     public function update(int $task_id, TaskRequest $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_tasks);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $data = $request->only([
             'name',
             'content',
@@ -63,9 +60,8 @@ class TaskController extends Controller
 
     public function store(int $project_id, TaskRequest $request)
     {
-        Gate::authorize(PermissionsEnum::manage_self_tasks);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $data = $request->only([
             'name',
             'content',
@@ -78,11 +74,10 @@ class TaskController extends Controller
         return redirect()->route('page.projects.tasks', $project_id);
     }
 
-    public function destroy(int $task_id, Request $request)
+    public function destroy(int $task_id)
     {
-        Gate::authorize(PermissionsEnum::manage_self_tasks);
+        $user_id = Auth::id();
 
-        $user_id = $request->user()->id;
         $response = $this->taskService->destroy($task_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
@@ -92,7 +87,7 @@ class TaskController extends Controller
 
     public function changeStatus(int $task_id, Request $request)
     {
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
         $status = $request->input('status');
 
         $response = $this->taskService->changeStatus($task_id, $status, $user_id);
@@ -102,14 +97,14 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function restore(int $task_id, Request $request)
+    public function restore(int $task_id)
     {
-        $user_id = $request->user()->id;
+        $user_id = Auth::id();
 
         $response = $this->taskService->restore($task_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
-        
+
         return redirect()->back();
     }
 }
