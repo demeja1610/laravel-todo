@@ -21,7 +21,7 @@ Route::group(['middleware' => 'guest'], function() {
     });
 });
 
-Route::group(['middleware' => ['auth', 'isBanned']], function() {
+Route::group(['middleware' => ['auth']], function() {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
     Route::group(['prefix' => 'projects'], function () {
