@@ -6,18 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TaskController;
-use App\Http\Controllers\UserController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 Route::get('/', [IndexController::class, 'index'])->middleware('auth')->name('index');
 
 Route::group(['middleware' => 'guest'], function() {
@@ -52,12 +41,5 @@ Route::group(['middleware' => ['auth', 'isBanned']], function() {
         Route::delete('{task_id}/destroy/', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::patch('{task_id}/change-status/', [TaskController::class, 'changeStatus'])->name('tasks.changeStatus');
         Route::put('{task_id}/restore/', [TaskController::class, 'restore'])->name('tasks.restore');
-    });
-
-    Route::group(['prefix' => 'users'], function () {
-        Route::get('/', [UserController::class, 'index'])->name('page.users');
-        Route::get('/{user_id}/block', [UserController::class, 'block'])->name('users.block');
-        Route::get('/{user_id}/unblock', [UserController::class, 'unblock'])->name('users.unblock');
-        Route::delete('{user_id}/destroy/', [UserController::class, 'destroy'])->name('users.destroy');
     });
 });
