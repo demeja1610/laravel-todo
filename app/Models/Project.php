@@ -4,14 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Askedio\SoftCascade\Traits\SoftCascadeTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Project extends Model
 {
-    use HasFactory, SoftDeletes, SoftCascadeTrait;
-
-    protected $softCascade = ['tasks'];
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
