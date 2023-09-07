@@ -36,7 +36,7 @@ class TaskController extends Controller
             return redirect()->back();
         }
 
-        return view('pages\task-edit', [
+        return view('pages.task-edit', [
             'task' => $response,
             'projects' => $this->projectService->index($user_id),
             'taskStatuses' => TaskStatusEnum::getConstants(),
@@ -56,6 +56,7 @@ class TaskController extends Controller
         $response = $this->taskService->update($task_id, $user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->route('page.tasks.edit', $task_id);
     }
 
@@ -73,6 +74,7 @@ class TaskController extends Controller
         $response = $this->taskService->store($project_id, $user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->route('page.projects.tasks', $project_id);
     }
 
@@ -84,6 +86,7 @@ class TaskController extends Controller
         $response = $this->taskService->destroy($task_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 
@@ -95,6 +98,7 @@ class TaskController extends Controller
         $response = $this->taskService->changeStatus($task_id, $status, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 
@@ -105,6 +109,7 @@ class TaskController extends Controller
         $response = $this->taskService->restore($task_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        
         return redirect()->back();
     }
 }

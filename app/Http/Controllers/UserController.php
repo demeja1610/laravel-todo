@@ -26,7 +26,7 @@ class UserController extends Controller
             return redirect()->route('page.users');
         }
 
-        return view('pages\users', ['users' => $response]);
+        return view('pages.users', ['users' => $response]);
     }
 
     public function block(int $user_id, Request $request)
@@ -37,6 +37,7 @@ class UserController extends Controller
         $response = $this->userService->block($user_id, $currentUserId);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 
@@ -47,6 +48,7 @@ class UserController extends Controller
         $response = $this->userService->unblock($user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 
@@ -58,6 +60,7 @@ class UserController extends Controller
         $response = $this->userService->destroy($user_id, $currentUserId);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        
         return redirect()->back();
     }
 }

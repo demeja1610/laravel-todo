@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Illuminate\Http\Request;
 use App\Services\Auth\LoginService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
@@ -23,7 +22,7 @@ class RegisterController extends Controller
 
     public function index()
     {
-        return view('pages\register');
+        return view('pages.register');
     }
 
     public function register(RegisterRequest $request)

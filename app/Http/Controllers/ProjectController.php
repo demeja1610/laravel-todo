@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Enum\TaskStatusEnum;
 use Illuminate\Http\Request;
 use App\Enum\PermissionsEnum;
-use App\Http\Requests\ProjectRequest;
 use App\Services\TaskService;
 use App\Services\ProjectService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
+use App\Http\Requests\ProjectRequest;
 
 class ProjectController extends Controller
 {
@@ -37,7 +37,7 @@ class ProjectController extends Controller
         $filter = $request->input('filter') === 'deleted' ? $request->input('filter') : null;
         $projects = $this->projectService->index($user_id, $filter, $q, 20);
 
-        return view('pages\projects', ['projects' => $projects]);
+        return view('pages.projects', ['projects' => $projects]);
     }
 
     public function edit(int $project_id, Request $request)
@@ -52,7 +52,7 @@ class ProjectController extends Controller
             return redirect()->back();
         }
 
-        return view('pages\project-edit', [
+        return view('pages.project-edit', [
             'project' => $response,
         ]);
     }
@@ -69,6 +69,7 @@ class ProjectController extends Controller
         $response = $this->projectService->update($project_id, $user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        
         return redirect()->route('page.projects.edit', $project_id);
     }
 
@@ -84,6 +85,7 @@ class ProjectController extends Controller
         $response = $this->projectService->store($user_id, $data);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->route('page.projects');
     }
 
@@ -95,6 +97,7 @@ class ProjectController extends Controller
         $response = $this->projectService->destroy($project_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 
@@ -112,7 +115,7 @@ class ProjectController extends Controller
 
         $tasks = $this->taskService->tasks($user_id, $project_id, $q, $filter, 20);
 
-        return view('pages\project-tasks', [
+        return view('pages.project-tasks', [
             'project' => $project,
             'tasks' => $tasks,
         ]);
@@ -125,6 +128,7 @@ class ProjectController extends Controller
         $response = $this->projectService->restore($project_id, $user_id);
 
         session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+
         return redirect()->back();
     }
 }
