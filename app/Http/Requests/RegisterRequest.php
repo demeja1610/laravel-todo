@@ -6,38 +6,29 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users|max:255',
-            'password' => 'required|confirmed|max:255'
+            'password' => 'required|confirmed|max:255|min:8'
         ];
     }
 
     public function messages()
     {
         return [
-            'required' => 'Данное поле обязательно',
-            'email' => 'Данное поле должно быть корректным email',
-            'email.unique' => 'Данный email уже зарегистрирован',
-            'confirmed' => 'Пароли должны совпадать',
-            'max' => 'Максимальная длинна: :max символов'
+            'required' => __('validation.required'),
+            'email' => __('validation.email_valid'),
+            'email.unique' => __('validation.email_unique'),
+            'confirmed' => __('validation.password_confirmed'),
+            'max' => __('validation.max'),
+            'min' => __('validation.min'),
         ];
     }
 }

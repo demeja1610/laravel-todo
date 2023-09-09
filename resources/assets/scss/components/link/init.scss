@@ -1,8 +1,9 @@
 .link {
-    color: var(--primary);
+    color: var(--primary-600);
     text-decoration: none;
+    transition: color 0.3s ease;
 
     &:hover {
-        color: var(--primary-darken-5);
+        color: var(--primary-650);
     }
 }

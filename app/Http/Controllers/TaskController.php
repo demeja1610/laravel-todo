@@ -2,108 +2,127 @@
 
 namespace App\Http\Controllers;
 
-use App\Enum\TaskStatusEnum;
 use Illuminate\Http\Request;
-use App\Services\TaskService;
-use App\Services\ProjectService;
-use App\Http\Requests\TaskRequest;
+use App\Dto\Task\CreateTaskDto;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Requests\CreateTaskRequest;
+use App\Repositories\Task\TaskRepositorySpecifier;
+use App\Interfaces\Repositories\TaskRepositoryInterface;
 
 class TaskController extends Controller
 {
-    private $taskService;
-    private $projectService;
-
-    public function __construct(
-        TaskService $taskService,
-        ProjectService $projectService
-    ) {
-        $this->taskService = $taskService;
-        $this->projectService = $projectService;
+    public function __construct(protected TaskRepositoryInterface $taskRepository)
+    {
     }
 
-    public function edit(int $task_id, Request $request)
+    public function index(Request $request)
     {
-        $user_id = Auth::id();
+        $userId = Auth::id();
+        $page = $request->get('page');
+        $completed = $request->get('completed');
 
-        $response = $this->taskService->edit($task_id, $user_id);
+        $specifier = new TaskRepositorySpecifier();
 
-        if (isset($response->error)) {
-            session()->flash('error', $response->error);
-            return redirect()->back();
+        $specifier->setUserId($userId)
+            ->setOrderBy('created_at')
+            ->setOrdeDirection('desc')
+            ->setCompleted(false);
+
+        $tasks = $this->taskRepository->matchSimplePaginated(
+            specifier: $specifier,
+            perPage: 25,
+            page: $page
+        );
+
+        return view('pages.tasks', compact([
+            'tasks',
+        ]));
+    }
+
+    public function store(CreateTaskRequest $request)
+    {
+        $createDto = new CreateTaskDto(
+            title: $request->get('title'),
+            userId: Auth::id()
+        );
+
+        $this->taskRepository->create($createDto);
+
+        return redirect()->route('page.tasks');
+    }
+
+    public function toggleFavorite($id)
+    {
+        $userId = Auth::id();
+
+        $specifier = new TaskRepositorySpecifier();
+
+        $specifier->setUserId($userId)
+            ->setId($id);
+
+        $this->taskRepository->toggleFavorite($specifier);
+
+        return redirect()->back();
+    }
+
+    public function toggleComplete($id)
+    {
+        $userId = Auth::id();
+
+        $specifier = new TaskRepositorySpecifier();
+
+        $specifier->setUserId($userId)
+            ->setId($id);
+
+        /**
+         * TODO: Specify select columns, cause we only need `completed_at` here
+         */
+        $task = $this->taskRepository->firstMatching($specifier);
+
+        if ($task) {
+            $task->completed_at === null
+                ? $this->taskRepository->complete($specifier)
+                : $this->taskRepository->uncomplete($specifier);
         }
 
-        return view('pages.task-edit', [
-            'task' => $response,
-            'projects' => $this->projectService->index($user_id),
-            'taskStatuses' => TaskStatusEnum::getConstants(),
-        ]);
+        return redirect()->back();
     }
 
-    public function update(int $task_id, TaskRequest $request)
+    public function delete($id)
     {
-        $user_id = Auth::id();
+        $userId = Auth::id();
 
-        $data = $request->only([
-            'name',
-            'content',
-        ]);
+        $specifier = new TaskRepositorySpecifier();
 
-        $response = $this->taskService->update($task_id, $user_id, $data);
+        $specifier->setUserId($userId)
+            ->setId($id)
+            ->setWithTrashed(true);
 
-        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        /**
+         * TODO: Specify select columns, cause we only need `deleted_at` here
+         */
+        $task = $this->taskRepository->firstMatching($specifier);
 
-        return redirect()->route('page.tasks.edit', $task_id);
-    }
-
-
-    public function store(int $project_id, TaskRequest $request)
-    {
-        $user_id = Auth::id();
-
-        $data = $request->only([
-            'name',
-            'content',
-        ]);
-
-        $response = $this->taskService->store($project_id, $user_id, $data);
-
-        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
-
-        return redirect()->route('page.projects.tasks', $project_id);
-    }
-
-    public function destroy(int $task_id)
-    {
-        $user_id = Auth::id();
-
-        $response = $this->taskService->destroy($task_id, $user_id);
-
-        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        if ($task) {
+            $task->deleted_at === null
+                ? $this->taskRepository->delete($specifier)
+                : $this->taskRepository->destroy($specifier);
+        }
 
         return redirect()->back();
     }
 
-    public function changeStatus(int $task_id, Request $request)
+    public function restore($id)
     {
-        $user_id = Auth::id();
-        $status = $request->input('status');
+        $userId = Auth::id();
 
-        $response = $this->taskService->changeStatus($task_id, $status, $user_id);
+        $specifier = new TaskRepositorySpecifier();
 
-        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        $specifier->setUserId($userId)
+            ->setId($id)
+            ->setWithTrashed(true);
 
-        return redirect()->back();
-    }
-
-    public function restore(int $task_id)
-    {
-        $user_id = Auth::id();
-
-        $response = $this->taskService->restore($task_id, $user_id);
-
-        session()->flash(isset($response->error) ? 'error' : 'success', $response->error ??  $response->message);
+        $this->taskRepository->restore($specifier);
 
         return redirect()->back();
     }

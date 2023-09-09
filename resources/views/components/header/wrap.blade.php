@@ -1,15 +1,16 @@
 <header class="header">
-    @include('components.logo.wrap')
+    <a href="{{ route('page.tasks') }}" class="header__logo">
+        {{ config('app.name') }}
+    </a>
 
-    <ul class="header-menu">
-        @foreach ($menu as $menuItem)
-            @if(isset($menuItem['can']))
-                @can($menuItem['can'])
-                    @include('components.header.item', ['menuItem' => $menuItem])
-                @endcan
-            @else
-                @include('components.header.item', ['menuItem' => $menuItem])
-            @endif
-        @endforeach
-    </ul>
+
+    <form class="header__logout" action="{{ route('logout') }}" method="POST">
+        @csrf
+
+        @method('DELETE')
+
+        @include('components.button.primary', [
+            'text' => __('auth_form.logout'),
+        ])
+    </form>
 </header>

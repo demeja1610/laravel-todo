@@ -1,0 +1,17 @@
+.create-task-form {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+
+    &__input {
+
+        flex-grow: 1;
+        margin-right: 15px;
+    }
+
+    &__submit {
+
+        padding: 12px 20px;
+    }
+}

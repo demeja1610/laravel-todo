@@ -2,224 +2,68 @@
 
 namespace App\Services;
 
-use Exception;
 use App\Models\Task;
-use App\Enum\TaskStatusEnum;
-use App\Repositories\TaskRepository;
-use Illuminate\Support\Facades\Gate;
+use App\Enum\Task\TaskActionEnum;
+use App\ValueObjects\Task\TaskActionValueObject;
+use App\Interfaces\Services\TaskServiceInterface;
 
-class TaskService
+class TaskService implements TaskServiceInterface
 {
-    private $taskRepository;
-
-    public function __construct(TaskRepository $taskRepository)
+    public function getAllowedActions(Task $model): array
     {
-        $this->taskRepository = $taskRepository;
+        $actions = [
+            $this->getCompleteTaskAction($model),
+            $this->getFavoriteTaskAction($model),
+            $this->getRestoreTaskAction($model),
+            $this->getDeleteTaskAction($model),
+        ];
+
+        return array_filter($actions, fn (?TaskActionValueObject $item) => $item !== null);
     }
 
-    public function tasks(
-        int $user_id = null,
-        int $project_id = null,
-        string $q = null,
-        string $filter = null,
-        int $paginate = null
-    ) {
-        $tasks = $this->taskRepository->tasks($user_id, $project_id, $q, $filter)->orderByDesc('created_at');
-
-        return $paginate ? $tasks->paginate($paginate) : $tasks->get();
-    }
-
-    public function edit(int $task_id, int $user_id = null)
+    protected function getDeleteTaskAction(Task &$model): TaskActionValueObject
     {
-        try {
-            $task = Task::byId($task_id)->first();
-
-            if (!$task) {
-                throw new Exception('Задача не найдена', 404);
-            }
-
-            if ($user_id) {
-                if ($task->user_id !== $user_id) {
-                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
-                }
-            }
-
-            return $task;
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
-        }
+        return new TaskActionValueObject(action: TaskActionEnum::DELETE, id: $model->id);
     }
 
-    public function update(int $task_id, int $user_id = null, array $data)
+    protected function getRestoreTaskAction(Task &$model): ?TaskActionValueObject
     {
-        try {
-            $task = Task::byId($task_id)->first();
+        $action = null;
 
-            if (!$task) {
-                throw new Exception('Задача не найдена', 404);
-            }
-
-            if ($user_id) {
-                if ($task->user_id !== $user_id) {
-                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
-                }
-            }
-
-            $task->name = $data['name'];
-            $task->content = $data['content'];
-
-            $success = $task->save();
-
-            if (!$success) {
-                throw new Exception('Не удалось изменить задачу', 500);
-            }
-
-            return (object) [
-                'message' => 'Задача успешно изменена',
-                'code' => 200,
-            ];
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
+        if ($model->trashed()) {
+            $action = new TaskActionValueObject(action: TaskActionEnum::RESTORE, id: $model->id);
         }
+
+        return $action;
     }
 
-    public function store(int $project_id, int $user_id, array $data)
+    protected function getCompleteTaskAction(Task &$model): ?TaskActionValueObject
     {
-        try {
-            $task = new Task($data);
-            $task->project_id = $project_id;
-            $task->user_id = $user_id;
+        $action = null;
 
-            $success = $task->save();
+        if (!$model->trashed()) {
+            $action = new TaskActionValueObject(action: TaskActionEnum::COMPLETE, id: $model->id);
 
-            if (!$success) {
-                throw new Exception('Не удалось добавить задачу', 500);
+            if ($model->completed_at !== null) {
+                $action->setIsPerformed(true);
             }
-
-            return (object) [
-                'message' => 'Задача успешно добавлена',
-                'code' => 200,
-            ];
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
         }
+
+        return $action;
     }
 
-    public function destroy(int $task_id, int $user_id = null)
+    protected function getFavoriteTaskAction(Task &$model): ?TaskActionValueObject
     {
-        try {
-            $task = Task::withTrashed()->where('id', $task_id)->first();
+        $action = null;
 
-            if (!$task) {
-                throw new Exception('Задача не найдена', 404);
+        if (!$model->trashed()) {
+            $action = new TaskActionValueObject(action: TaskActionEnum::FAVORITE, id: $model->id);
+
+            if ($model->favorite !== false) {
+                $action->setIsPerformed(true);
             }
-
-            if ($user_id) {
-                if ($task->user_id !== $user_id) {
-                    throw new Exception('Вы не можете удалять задачи других пользователей', 403);
-                }
-            }
-
-            $success = $task->trashed() ? $task->forceDelete() : $task->delete();
-
-            if (!$success) {
-                throw new Exception('Не удалось удалить задачу', 500);
-            }
-
-            return (object) [
-                'message' => 'Задача успешно удалена',
-                'code' => 200,
-            ];
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
         }
-    }
 
-    public function changeStatus(int $task_id, string $status, int $user_id = null)
-    {
-        try {
-            $task = Task::byId($task_id)->first();
-
-            if (!$task) {
-                throw new Exception('Задача не найдена', 404);
-            }
-
-            if ($user_id) {
-                if ($task->user_id !== $user_id) {
-                    throw new Exception('Вы не можете изменять задачи других пользователей', 403);
-                }
-            }
-
-            $taskStatuses = TaskStatusEnum::getConstants();
-
-            if (!in_array($status, $taskStatuses)) {
-                throw new Exception('Неверно указан статус', 500);
-            }
-
-            $task->status = $status;
-            $success = $task->save();
-
-            if (!$success) {
-                throw new Exception('Не удалось изменить статус задачи', 500);
-            }
-
-            return (object) [
-                'message' => 'Статус задачи успешно изменен',
-                'code' => 200,
-            ];
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
-        }
-    }
-
-    public function restore(int $task_id, $user_id) {
-        try {
-            $task = Task::onlyTrashed()->where('id', $task_id)->first();
-
-            if (!$task) {
-                throw new Exception('Задача не найдена', 404);
-            }
-
-            if(!$task->trashed()) {
-                throw new Exception('Задача не нуждается в востановлении', 404);
-            }
-
-            if ($user_id) {
-                if ($task->user_id !== $user_id) {
-                    throw new Exception('Вы не можете восстанавливать задачи других пользователей', 403);
-                }
-            }
-
-            $success = $task->restore();
-
-            if (!$success) {
-                throw new Exception('Не удалось восстановить задачу', 500);
-            }
-
-            return (object) [
-                'message' => 'Задача успешно восстановлена',
-                'code' => 200,
-            ];
-        } catch (Exception $e) {
-            return (object) [
-                'error' => $e->getMessage(),
-                'code' => $e->getCode(),
-            ];
-        }
+        return $action;
     }
 }

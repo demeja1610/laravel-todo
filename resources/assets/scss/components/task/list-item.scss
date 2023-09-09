@@ -1,0 +1,74 @@
+.task-list__item {
+    margin-bottom: 15px;
+    border: 1px solid var(--gray-300);
+    padding: 10px 15px 5px 15px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 8px;
+
+    &-title {
+        font-size: 16px;
+        color: var(--gray-800);
+        flex-grow: 1;
+        margin-bottom: 10px;
+    }
+
+    &-metas {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+    }
+
+    &-date {
+        font-size: 14px;
+        color: var(--gray-500);
+    }
+
+    &-actions {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        margin-left: auto;
+        margin-right: -5px;
+    }
+
+    &-action {
+        color: var(--gray-400);
+        transition: color 0.3s ease;
+
+        &-submit {
+            cursor: pointer;
+            padding: 5px;
+            border: none;
+            background-color: transparent;
+            color: inherit;
+
+            &-icon {
+                width: 20px;
+                height: 20px;
+                fill: currentColor;
+                transition: fill 0.3s;
+            }
+        }
+
+        &:hover {
+            color: var(--gray-500);
+        }
+
+        &.active {
+            color: var(--gray-500);
+
+            &.task-list__item-action--FAVORITE {
+                color: var(--red-600);
+            }
+
+            &.task-list__item-action--COMPLETE {
+                color: var(--primary-600);
+            }
+        }
+    }
+}

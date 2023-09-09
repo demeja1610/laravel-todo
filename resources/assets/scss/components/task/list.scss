@@ -1,0 +1,16 @@
+.task-list {
+    width: 100%;
+    list-style: none;
+
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    &__empty {
+        width: 100%;
+        text-align: center;
+        color: var(--gray-800);
+    }
+}

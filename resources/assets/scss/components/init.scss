@@ -1,17 +1,13 @@
-@import "./login-form/init";
-@import "./select/init";
-@import "./input-text/init";
+@import "./input/init";
+
 @import "./button/init";
+
 @import "./link/init";
-@import "./checkbox/init";
-@import "./register-form/init";
+
 @import "./header/init";
-@import "./logo/init";
-@import "./sidebar/init";
-@import "./projects/init";
-@import "./tasks/init";
-@import "./modal/init";
-@import "./overlay/init";
-@import "./textarea/init";
-@import "./notification/init";
-@import "./pagination/init";
+
+@import "./form/init";
+
+@import "./task/init";
+
+// @import "./pagination/init";

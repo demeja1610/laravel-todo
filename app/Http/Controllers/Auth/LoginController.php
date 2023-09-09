@@ -4,46 +4,37 @@ namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
-use App\Services\Auth\LoginService;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    private $loginService;
-
-    public function __construct(LoginService $loginService)
-    {
-        $this->loginService = $loginService;
-    }
-
     public function index()
     {
         return view('pages.login');
     }
 
-    public function login(LoginRequest $request)
+    public function store(LoginRequest $request)
     {
-        $credentials = $request->only(['email', 'password']);
-        $response = $this->loginService->login($credentials, (bool) $request->input('remember_me'));
+        $request->authenticate();
 
-        if(isset($response->error)) {
-            session()->flash('error', $response->error);
-            return redirect()->back()->withInput();
-        }
+        $request->session()->regenerate();
 
-        return redirect()->route('page.projects');
+        return $request->wantsJson()
+            ? response()->noContent()
+            : redirect()->route('page.tasks');
     }
 
-    public function logout(Request $request) {
-        $response = $this->loginService->logout();
+    public function destroy(Request $request)
+    {
+        Auth::guard('web')->logout();
+
         $request->session()->invalidate();
+
         $request->session()->regenerateToken();
 
-        if(isset($response->error)) {
-            session()->flash('error', $response->error);
-            return redirect()->back();
-        }
-
-        return redirect()->route('page.login');
+        return $request->wantsJson()
+            ? response()->noContent()
+            : redirect()->route('page.login');
     }
 }

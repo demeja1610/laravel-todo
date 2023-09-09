@@ -2,47 +2,34 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Services\Auth\LoginService;
+use App\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
-use App\Services\Auth\RegisterService;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
-    private $registerService;
-    private $loginService;
-
-    public function __construct(
-        RegisterService $registerService,
-        LoginService $loginService
-    ) {
-        $this->registerService = $registerService;
-        $this->loginService = $loginService;
-    }
-
     public function index()
     {
         return view('pages.register');
     }
 
-    public function register(RegisterRequest $request)
+    public function store(RegisterRequest $request)
     {
-        $credentials = $request->only(['name', 'email', 'password']);
+        $user = User::create([
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
 
-        $response = $this->registerService->register($credentials);
+        event(new Registered($user));
 
-        if (isset($response->error)) {
-            session()->flash('error', $response->error);
-            return redirect()->back()->withInput();
-        }
+        Auth::login($user);
 
-        $loggedIn = $this->loginService->login($credentials);
-
-        if (isset($loggedIn->error)) {
-            session()->flash('error', $response->error);
-            return redirect()->back()->withInput();
-        }
-
-        return redirect()->route('page.projects');
+        return $request->wantsJson()
+            ? response()->noContent()
+            : redirect()->route('page.tasks');
     }
 }

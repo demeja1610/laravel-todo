@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('components.register-form.wrap')
+    <div class="page page--register">
+        @include('components.form.register')
+    </div>
 @endsection

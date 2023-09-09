@@ -1,0 +1,16 @@
+.register-form {
+    @extend .login-form;
+
+    &__send {
+        @extend .login-form__send;
+    }
+
+    &__meta {
+
+        text-align: center;
+
+        &-link {
+            margin-left: 5px;
+        }
+    }
+}
